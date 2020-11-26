@@ -21,6 +21,8 @@ import youtube_dl
 ####
 #### Global Variable Declaration
 ####
+
+#load environment variables and sensitive information
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 GUILD = os.getenv('DISCORD_GUILD')
@@ -30,10 +32,11 @@ spot_client_secret = os.getenv('client_secret')
 
 print("\n Loaded Environment Variables \n")
 
+#Connect to Spotify
 client_credentials_manager = SpotifyClientCredentials(spot_client_id, spot_client_secret)
 sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
-baseFiles = ['.env', 'bot.py', 'scratch.txt', 'test.py']
-path = "C:/Users/unger/Documents/python/DiscordBotTest"
+baseFiles = ['.env', 'bot.py', 'scratch.txt', 'test.py', 'env', '.git']
+path = os.getenv('path')
 
 print("\n Used Spotify Credentials \n")
 
@@ -43,13 +46,12 @@ songQueueCopy = queue.SimpleQueue()
 players = {}
 
 
-
+#Create initial bot and set prefix
 bot = commands.Bot(command_prefix = '$')
 
 ####
 #### youtube_dl settings
 ####
-
 
 youtube_dl.utils.bug_reports_message = lambda: ''
 
@@ -111,6 +113,7 @@ async def from_url(url):
 
     return discord.FFmpegPCMAudio(filename, **ffmpeg_options)
 
+#Cleans old audio files from folder
 async def cleanUp(path, baseFiles):
     for item in os.listdir(path):
         if item not in baseFiles:
